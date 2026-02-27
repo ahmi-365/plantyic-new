@@ -1,24 +1,24 @@
-import Link from "next/link";
-import { useEffect, useState, useMemo } from "react";
-import { getSidebarCollapsedState, toggleSidebar as toggleSidebarUtil } from "@/utils/sidebarUtils";
 import { useAuth } from "@/contexts/auth-context";
+import { getSidebarCollapsedState, toggleSidebar as toggleSidebarUtil } from "@/utils/sidebarUtils";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
+import ProjectSelector from "./ProjectSelector";
 import ResizableSidebar from "./ResizableSidebar";
 import WorkspaceSelector from "./WorkspaceSelector";
-import ProjectSelector from "./ProjectSelector";
 
-import {
-  HiHome,
-  HiViewGrid,
-  HiClipboardList,
-  HiUsers,
-  HiCalendar,
-  HiCog,
-  HiMenu,
-  HiLightningBolt,
-  HiViewBoards,
-} from "react-icons/hi";
 import { useProject } from "@/contexts/project-context";
+import {
+  HiCalendar,
+  HiClipboardList,
+  HiCog,
+  HiHome,
+  HiLightningBolt,
+  HiMenu,
+  HiUsers,
+  HiViewBoards,
+  HiViewGrid,
+} from "react-icons/hi";
 
 // Type definitions
 interface NavItem {
@@ -262,20 +262,6 @@ export default function Sidebar() {
         title: "Sprints",
         disabled: false,
       },
-      // {
-      //   name: "Calendar",
-      //   href: `/${currentWorkspaceSlug || ""}/${currentProjectSlug || ""}/calendar`,
-      //   icon: <HiCalendar size={16} />,
-      //   title: "Calendar",
-      //   disabled: false,
-      // },
-      // {
-      //   name: "Members",
-      //   href: `/${currentWorkspaceSlug || ""}/${currentProjectSlug || ""}/members`,
-      //   icon: <HiUsers size={16} />,
-      //   title: "Members",
-      //   disabled: false,
-      // },
     ],
     [currentWorkspaceSlug, currentProjectSlug]
   );
@@ -336,12 +322,9 @@ export default function Sidebar() {
   }, [currentWorkspaceSlug, currentProjectSlug, isAuth, defaultProjectNavItems]);
 
   const navigationItems: NavItem[] = useMemo(() => {
-    // For unauthenticated users, always show project navigation (disabled)
     if (!isAuth) {
       return defaultProjectNavItems;
     }
-
-    // For authenticated users, use existing logic
     if (currentWorkspaceSlug && currentProjectSlug) return projectNavItems;
     if (currentWorkspaceSlug) return workspaceNavItems;
     return globalNavItems;
@@ -356,7 +339,6 @@ export default function Sidebar() {
   ]);
 
   const miniSidebarNavItems = useMemo(() => {
-    // For unauthenticated users, use global nav items for mini sidebar (disabled)
     if (!isAuth) {
       setMiniPathName("/workspaces");
       return globalNavItems;
@@ -393,7 +375,6 @@ export default function Sidebar() {
     isSidebarCollapsed,
   ]);
 
-  // Listen for sidebar state changes from other components
   useEffect(() => {
     const handleSidebarStateChange = (event: CustomEvent) => {
       setIsSidebarCollapsed(event.detail.collapsed);
@@ -405,6 +386,7 @@ export default function Sidebar() {
       window.removeEventListener("sidebarStateChange", handleSidebarStateChange as EventListener);
     };
   }, []);
+  
   useEffect(() => {
     const fetchProject = async () => {
       if (!currentWorkspaceSlug || !currentProjectSlug) {
@@ -443,7 +425,8 @@ export default function Sidebar() {
         {!isAuth && (
           <div className="layout-sidebar-header-dashboard">
             <div className="layout-sidebar-header-dashboard-content">
-              <div className="layout-sidebar-header-dashboard-icon">
+              {/* Added Red color to Header Icon */}
+              <div className="layout-sidebar-header-dashboard-icon text-red-600 dark:text-red-500">
                 <HiViewBoards size={16} />
               </div>
               <span className="layout-sidebar-header-dashboard-title">
@@ -467,7 +450,8 @@ export default function Sidebar() {
                 return (
                   <div className="layout-sidebar-header-dashboard">
                     <div className="layout-sidebar-header-dashboard-content">
-                      <div className="layout-sidebar-header-dashboard-icon">
+                      {/* Added Red color to Active Header Icon */}
+                      <div className="layout-sidebar-header-dashboard-icon text-red-600 dark:text-red-500">
                         {activeItem ? activeItem.icon : "TS"}
                       </div>
                       <span className="layout-sidebar-header-dashboard-title">
@@ -506,24 +490,24 @@ export default function Sidebar() {
                   <div
                     className={`layout-sidebar-nav-link layout-sidebar-nav-link-disabled ${
                       isItemActive
-                        ? "layout-sidebar-nav-link-active"
+                        ? "layout-sidebar-nav-link-active bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400 border-l-4 border-red-600"
                         : "layout-sidebar-nav-link-inactive"
                     }`}
                     onClick={handleDisabledClick}
                     style={{ cursor: "pointer", opacity: 0.6 }}
                     title="Login required to access this feature"
                   >
-                    <span className="layout-sidebar-nav-link-icon">{item.icon}</span>
+                    <span className={`layout-sidebar-nav-link-icon ${isItemActive ? 'text-red-600 dark:text-red-400' : ''}`}>{item.icon}</span>
                     <span className="layout-sidebar-nav-link-text">{item.name}</span>
                   </div>
                 ) : (
-                  // Enabled navigation item
+                  // Enabled navigation item - Injected Red Styles for Active/Hover states
                   <Link
                     href={item.href}
-                    className={`layout-sidebar-nav-link ${
+                    className={`layout-sidebar-nav-link transition-colors duration-200 ${
                       isItemActive
-                        ? "layout-sidebar-nav-link-active"
-                        : "layout-sidebar-nav-link-inactive"
+                        ? "layout-sidebar-nav-link-active bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-400"
+                        : "layout-sidebar-nav-link-inactive hover:bg-red-50/50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                     }`}
                     {...(item.name === "Settings" && {
                       "data-automation-id": item.href === "/settings"
@@ -534,7 +518,7 @@ export default function Sidebar() {
                       "aria-label": item.title || "Settings"
                     })}
                   >
-                    <span className="layout-sidebar-nav-link-icon">{item.icon}</span>
+                    <span className={`layout-sidebar-nav-link-icon ${isItemActive ? 'text-red-600 dark:text-red-400' : ''}`}>{item.icon}</span>
                     <span className="layout-sidebar-nav-link-text">{item.name}</span>
                   </Link>
                 )}
@@ -561,7 +545,7 @@ export default function Sidebar() {
       <div className="layout-sidebar-mini">
         <button
           onClick={() => toggleSidebar(!isSidebarCollapsed)}
-          className="layout-sidebar-mini-expand-button"
+          className="layout-sidebar-mini-expand-button hover:text-red-600 dark:hover:text-red-400 transition-colors"
           title="Expand navigation"
         >
           <HiMenu size={16} />
@@ -580,9 +564,9 @@ export default function Sidebar() {
             return item.disabled ? (
               <div
                 key={item.name}
-                className={`layout-sidebar-mini-nav-link layout-sidebar-mini-nav-link-disabled ${
+                className={`layout-sidebar-mini-nav-link layout-sidebar-mini-nav-link-disabled flex items-center justify-center w-10 h-10 rounded-lg mb-2 ${
                   isItemActive
-                    ? "layout-sidebar-nav-link-active"
+                    ? "layout-sidebar-nav-link-active bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400"
                     : "layout-sidebar-mini-nav-link-inactive"
                 }`}
                 title="Login required to access this feature"
@@ -594,10 +578,10 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`layout-sidebar-mini-nav-link ${
+                className={`layout-sidebar-mini-nav-link flex items-center justify-center w-10 h-10 rounded-lg mb-2 transition-colors duration-200 ${
                   isItemActive
-                    ? "layout-sidebar-nav-link-active"
-                    : "layout-sidebar-mini-nav-link-inactive"
+                    ? "layout-sidebar-nav-link-active bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400"
+                    : "layout-sidebar-mini-nav-link-inactive hover:bg-red-50/50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                 }`}
                 title={item.title || item.name}
               >
@@ -622,7 +606,7 @@ export default function Sidebar() {
       {isSidebarCollapsed && (
         <button
           onClick={() => toggleSidebar(!isSidebarCollapsed)}
-          className="layout-sidebar-toggle-button"
+          className="layout-sidebar-toggle-button hover:text-red-600 dark:hover:text-red-400 transition-colors"
           title="Show navigation"
         >
           <HiMenu size={16} />
