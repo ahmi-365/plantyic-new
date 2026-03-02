@@ -1,28 +1,26 @@
-import { useState, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { motion } from "framer-motion";
-import { useAuth } from "@/contexts/auth-context";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import Image from "next/image";
+import { useAuth } from "@/contexts/auth-context";
+import { motion } from "framer-motion";
 import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
   Eye,
   EyeOff,
-  AlertCircle,
-  UserPlus,
   Loader2,
-  Mail,
   Lock,
-  User,
-  CheckCircle2,
-  ArrowRight,
-  Shield,
+  Mail,
+  User
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
 
 interface FormData {
   firstName: string;
@@ -108,11 +106,17 @@ export function RegisterForm() {
     }
 
     try {
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim();
       const userData = {
+        name: fullName || "New Customer",
         email: formData.email,
         password: formData.password,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        password_confirmation: formData.confirmPassword,
+        phone: "+97150",
+        user_type: "customer" as const,
+        country: "UAE",
+        state: "Dubai",
+        address: "Jumeirah, Dubai",
       };
 
       const response = await register(userData);

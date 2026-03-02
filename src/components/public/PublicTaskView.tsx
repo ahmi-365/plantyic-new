@@ -43,7 +43,7 @@ export default function PublicTaskView({ task, token }: PublicTaskViewProps) {
       const fileUrl = await shareApi.getAttachmentUrl(token, attachment.id);
       if (!fileUrl) throw new Error('Attachment URL not found');
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL;
       
       const fullUrl = fileUrl.startsWith('http') 
         ? fileUrl 

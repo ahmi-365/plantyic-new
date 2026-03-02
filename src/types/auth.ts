@@ -1,10 +1,15 @@
 import type { User } from "./users";
 
 export interface UserData {
+  name: string;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  password_confirmation: string;
+  phone: string;
+  user_type: "customer";
+  country: string;
+  state: string;
+  address: string;
 }
 
 export interface LoginData {

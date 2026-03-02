@@ -6,11 +6,10 @@ import {
   LoginData,
   ResetPasswordData,
   SetupAdminData,
-  SetupResponse,
   SetupStatusResponse,
   UploadFileResponse,
   User,
-  UserData,
+  UserData
 } from "@/types";
 
 // Utility functions for validation
@@ -199,7 +198,7 @@ export const authApi = {
   },
 
   register: async (userData: UserData): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>("/auth/register", userData);
+    const response = await api.post<AuthResponse>("/auth/register/customer", userData);
 
     const { access_token, refresh_token, user } = response.data;
 

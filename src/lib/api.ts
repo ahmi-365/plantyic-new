@@ -263,7 +263,7 @@ const refreshTokens = async (): Promise<string> => {
     }
 
     const response = await axios.post<AuthTokenResponse>(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api"}/auth/refresh`,
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh`,
       { refresh_token: refreshToken },
       {
         headers: { "Content-Type": "application/json" },
@@ -301,7 +301,7 @@ const refreshTokens = async (): Promise<string> => {
 
 // Create axios instance
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL ,
   timeout: 120000,
   headers: {
     "Content-Type": "application/json",
